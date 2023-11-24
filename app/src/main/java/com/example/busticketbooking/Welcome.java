@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -35,6 +37,8 @@ public class Welcome extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcome);
 
 
@@ -42,20 +46,46 @@ public class Welcome extends AppCompatActivity {
         from=findViewById(R.id.from);
         destin=findViewById(R.id.destin);
         date=findViewById(R.id.date);
-
+        calendar=Calendar.getInstance();
         ArrayAdapter<String>adapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,places);
         from.setAdapter(adapter);
         destin.setAdapter(adapter);
 
-        
+        DatePickerDialog.OnDateSetListener Date=new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                calendar.set(Calendar.YEAR,year);
+                calendar.set(Calendar.MONTH,month);
+                calendar.set(Calendar.DAY_OF_MONTH,day);
+                updateDate();
+            }
+        };
+
+        date.setOnClickListener(view -> {
+            new DatePickerDialog(Welcome.this,Date,calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String fr=from.getText().toString().trim();
+                String to=destin.getText().toString().trim();
+                String dt=date.getText().toString().trim();
                 Intent intent=new Intent(Welcome.this, MainActivity2.class);
+                intent.putExtra("from",fr);
+                intent.putExtra("to",to);
+                intent.putExtra("date",dt);
                 startActivity(intent);
+                from.setText("");
+                destin.setText("");
+                date.setText("");
             }
         });
+    }
+    private void updateDate() {
+        String mformat="dd/mm/yy EEEE";
+        SimpleDateFormat dateFormat=new SimpleDateFormat(mformat, Locale.UK);
+        date.setText(dateFormat.format(calendar.getTime()));
     }
 
 }

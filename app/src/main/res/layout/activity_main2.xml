@@ -115,6 +115,7 @@
                             android:layout_weight="45"
                             android:fontFamily="@font/gotham"
                             android:text="Pune"
+                            android:id="@+id/from"
                             android:textAlignment="center"
                             android:textColor="#FFFFFF"
                             android:textSize="18sp" />
@@ -132,6 +133,7 @@
                             android:layout_weight="45"
                             android:fontFamily="@font/gotham"
                             android:text="Mumbai"
+                            android:id="@+id/to"
                             android:textAlignment="center"
                             android:textColor="#FFFFFF"
                             android:textSize="18sp" />

@@ -16,9 +16,8 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             app:popupTheme="@style/Widget.AppCompat.PopupMenu.Overflow">
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -29,7 +28,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:src="@drawable/ic_person_outline_white_24dp" />
+                    android:src="@drawable/baseline_person_24"
+                    android:backgroundTint="@color/black"
+                    />
 
             </RelativeLayout>
 
@@ -86,7 +87,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="16dp"
                         android:fontFamily="@font/print_clearly"
-                        android:text="Hey Shanky!"
+                        android:text="Choose Destination"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
                         android:textSize="32sp" />
@@ -141,14 +142,15 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="50dp"
                                 android:drawableStart="@drawable/ic_location_on_light_blue_24dp"
-                                android:drawablePadding="15dp"
                                 android:fontFamily="@font/calibri"
                                 android:hint="Enter Place"
+                                android:padding="10dp"
+                                android:drawablePadding="15dp"
                                 android:id="@+id/from"
                                 android:inputType="textAutoComplete|textAutoCorrect"
                                 android:maxLines="1"
                                 android:textColor="@android:color/black"
-                                android:textSize="16sp" />
+                                android:textSize="18sp" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <TextView
@@ -169,14 +171,15 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="50dp"
                                 android:drawableStart="@drawable/ic_location_on_light_blue_24dp"
-                                android:drawablePadding="16dp"
+                                android:padding="10dp"
+                                android:drawablePadding="15dp"
                                 android:fontFamily="@font/calibri"
                                 android:hint="Enter Place"
                                 android:id="@+id/destin"
                                 android:inputType="textAutoComplete|textAutoCorrect"
                                 android:maxLines="1"
                                 android:textColor="@android:color/black"
-                                android:textSize="16sp" />
+                                android:textSize="18sp" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <TextView
@@ -198,14 +201,15 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="50dp"
                                 android:drawableStart="@drawable/ic_date_range_light_blue_24dp"
-                                android:drawablePadding="16dp"
+                                android:padding="10dp"
+                                android:drawablePadding="15dp"
                                 android:fontFamily="@font/calibri"
                                 android:hint="Select Date"
                                 android:inputType="date"
                                 android:id="@+id/date"
                                 android:maxLines="1"
                                 android:textColor="@android:color/black"
-                                android:textSize="16sp" />
+                                android:textSize="18sp" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                     </LinearLayout>
@@ -216,7 +220,7 @@
                 <Button
                     android:id="@+id/search_buses"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:layout_margin="16dp"
                     android:background="@drawable/buttonshape"
