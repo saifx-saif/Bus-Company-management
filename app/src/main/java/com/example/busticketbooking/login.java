@@ -2,6 +2,7 @@ package com.example.busticketbooking;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.viewmodel.CreationExtras;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +29,8 @@ public class login extends AppCompatActivity {
     EditText email,password;
     Button sign;
     TextView forget,register;
-    String emailss;
+   // String emailss;
+    ImageView img;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,7 @@ public class login extends AppCompatActivity {
         forget=findViewById(R.id.forget);
         register=findViewById(R.id.register);
         password=findViewById(R.id.password);
-
+        img=findViewById(R.id.admin);
         auth=FirebaseAuth.getInstance();
 
         sign.setOnClickListener(new View.OnClickListener() {
@@ -48,7 +51,6 @@ public class login extends AppCompatActivity {
             public void onClick(View view) {
                 String pass=password.getText().toString().trim();
                 String emails=email.getText().toString().trim();
-                emailss=emails;
                 auth.signInWithEmailAndPassword(emails,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -78,19 +80,34 @@ public class login extends AppCompatActivity {
         forget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                auth.sendPasswordResetEmail(emailss).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(login.this,"Reset password link sent on Your Email", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(login.this,e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                String emails=email.getText().toString().trim();
+                if (emails.length()!=0) {
+                    auth.sendPasswordResetEmail(emails).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(login.this, "Reset password link sent on Your Email", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+                else {
+                    Toast.makeText(login.this, "Enter Email", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(login.this,addTrip.class);
+                startActivity(intent);
             }
         });
     }
+
 }

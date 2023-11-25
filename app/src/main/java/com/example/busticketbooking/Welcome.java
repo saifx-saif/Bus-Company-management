@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -62,7 +63,19 @@ public class Welcome extends AppCompatActivity {
         };
 
         date.setOnClickListener(view -> {
-            new DatePickerDialog(Welcome.this,Date,calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
+           // DatePickerDialog datePickerDialog;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                // Use setMinDate on API 11 and higher
+                datePickerDialog = new DatePickerDialog(Welcome.this, Date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            } else {
+                // For API levels lower than 11, restrict the date range programmatically
+                datePickerDialog = new DatePickerDialog(Welcome.this, Date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+            }
+
+            datePickerDialog.show();
         });
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +84,7 @@ public class Welcome extends AppCompatActivity {
                 String fr=from.getText().toString().trim();
                 String to=destin.getText().toString().trim();
                 String dt=date.getText().toString().trim();
+
                 Intent intent=new Intent(Welcome.this, MainActivity2.class);
                 intent.putExtra("from",fr);
                 intent.putExtra("to",to);
@@ -83,7 +97,7 @@ public class Welcome extends AppCompatActivity {
         });
     }
     private void updateDate() {
-        String mformat="dd/mm/yy EEEE";
+        String mformat="dd/MM/yy EEEE";
         SimpleDateFormat dateFormat=new SimpleDateFormat(mformat, Locale.UK);
         date.setText(dateFormat.format(calendar.getTime()));
     }

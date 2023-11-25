@@ -207,6 +207,8 @@
                                 android:hint="Select Date"
                                 android:inputType="date"
                                 android:id="@+id/date"
+                                android:clickable="false"
+                                android:focusable="false"
                                 android:maxLines="1"
                                 android:textColor="@android:color/black"
                                 android:textSize="18sp" />
