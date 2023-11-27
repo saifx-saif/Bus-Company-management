@@ -85,10 +85,16 @@ public class Welcome extends AppCompatActivity {
                 String to=destin.getText().toString().trim();
                 String dt=date.getText().toString().trim();
 
+                int day=calendar.get(Calendar.DAY_OF_MONTH);
+                int mon=calendar.get(Calendar.MONTH);
+                int yr=calendar.get(Calendar.YEAR);
+                String datts=String.valueOf(day)+String.valueOf(mon)+String.valueOf(yr);
+
                 Intent intent=new Intent(Welcome.this, MainActivity2.class);
                 intent.putExtra("from",fr);
                 intent.putExtra("to",to);
                 intent.putExtra("date",dt);
+                intent.putExtra("dat",datts);
                 startActivity(intent);
                 from.setText("");
                 destin.setText("");
