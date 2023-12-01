@@ -1058,7 +1058,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="175dp"
+                    android:layout_marginLeft="145dp"
                     android:text="Proceed"
                     android:id="@+id/proceed"
                     android:backgroundTint="#8CBDF4"

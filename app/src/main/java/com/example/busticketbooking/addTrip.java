@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class addTrip extends AppCompatActivity {
@@ -135,16 +136,28 @@ public class addTrip extends AppCompatActivity {
                 trip.setFare(far);
                 trip.setCoach(coch);
                 trip.setTimes(times);
+              //  Seats seats=new Seats();
                 int cnt=calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                 for (int i=day;i<=cnt;i++){
                     calendar.set(yr,mon,i);
+
                     int dayofweek=calendar.get(Calendar.DAY_OF_WEEK);
                     String datename=getDayName(dayofweek);
                     String datts=String.valueOf(i)+String.valueOf(mon)+String.valueOf(yr);
                     String dattes=String.valueOf(i)+"/"+String.valueOf(mon)+"/"+String.valueOf(yr)+"  "+datename;
                     trip.setDate(dattes);
 
+                    HashMap<String,String> seats=new HashMap<>();
+                    char nam='a';
+                    for (int j=0;j<36;j++){
+                        seats.put(nam+String.valueOf(j),"true");
+                        if((j+1)%4==0){
+                            nam++;
+                        }
+                    }
+
                     reference.child("Trips").child(fr+to).child(datts).child(coch).setValue(trip);
+                    reference.child("Seats").child(fr+to).child(datts).child(coch).setValue(seats);
 
                 }
                 Toast.makeText(addTrip.this, "Trip Added Successfull", Toast.LENGTH_SHORT).show();
