@@ -59,7 +59,7 @@ public class MainActivity2 extends AppCompatActivity {
         databaseReference= FirebaseDatabase.getInstance().getReference().child("Trips").child(st).child(dat);
         list=new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        tripAdapter=new TripAdapter(this,list,date,mail);
+        tripAdapter=new TripAdapter(this,list,date,dat);
         recyclerView.setAdapter(tripAdapter);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

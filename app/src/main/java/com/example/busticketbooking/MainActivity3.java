@@ -1,5 +1,6 @@
 package com.example.busticketbooking;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
@@ -13,14 +14,20 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity3 extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,7 +37,10 @@ public class MainActivity3 extends AppCompatActivity implements View.OnClickList
     private int[][] clickCount = new int[9][4];
     private String[] buttonIds = new String[36];
     private List<String> clickedButtonIds = new ArrayList<>();
+    private Map<String, String> seatsData = new HashMap<>();
+    private DatabaseReference databaseReference;
     int far;
+    Button proc;
     TextView a1,a2,a3,a4,b1,b2,b3,b4,c1,c2,c3,c4,d1,d2,d3,d4,e1,e2,e3,e4,f1,f2,f3,f4,g1,g2,g3,g4,h1,h2,h3,h4,i1,i2,i3,i4;
     @SuppressLint("MissingInflatedId")
     @Override
@@ -49,42 +59,8 @@ public class MainActivity3 extends AppCompatActivity implements View.OnClickList
         seats=findViewById(R.id.seats);
         total=findViewById(R.id.total);
        // a1.setClickable(false);
-      /*  a1=findViewById(R.id.a1);
-        a2=findViewById(R.id.a2);
-        a3=findViewById(R.id.a3);
-        a4=findViewById(R.id.a4);
-        b1=findViewById(R.id.b1);
-        b2=findViewById(R.id.b2);
-        b3=findViewById(R.id.b3);
-        b4=findViewById(R.id.b4);
-        c1=findViewById(R.id.c1);
-        c2=findViewById(R.id.c2);
-        c3=findViewById(R.id.c3);
-        c4=findViewById(R.id.c4);
-        d1=findViewById(R.id.d1);
-        d2=findViewById(R.id.d2);
-        d3=findViewById(R.id.d3);
-        d4=findViewById(R.id.d4);
-        e1=findViewById(R.id.e1);
-        e2=findViewById(R.id.e2);
-        e3=findViewById(R.id.e3);
-        e4=findViewById(R.id.e4);
-        f1=findViewById(R.id.f1);
-        f2=findViewById(R.id.f2);
-        f3=findViewById(R.id.f3);
-        f4=findViewById(R.id.f4);
-        g1=findViewById(R.id.g1);
-        g2=findViewById(R.id.g2);
-        g3=findViewById(R.id.g3);
-        g4=findViewById(R.id.g4);
-        h1=findViewById(R.id.h1);
-        h2=findViewById(R.id.h2);
-        h3=findViewById(R.id.h3);
-        h4=findViewById(R.id.h4);
-        i1=findViewById(R.id.i1);
-        i2=findViewById(R.id.i2);
-        i3=findViewById(R.id.i3);
-        i4=findViewById(R.id.i4);*/
+        proc=findViewById(R.id.proceed);
+
 
 
 
@@ -107,7 +83,10 @@ public class MainActivity3 extends AppCompatActivity implements View.OnClickList
         initializeTextViews();
         initializeButtonIds();
 
-        //DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference().child("Seats").child(fromm+tto).child()
+       // textViews[2][3].setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#8bbe1b")));
+       // FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference= FirebaseDatabase.getInstance().getReference().child("Seats").child(fromm+tto).child(mail).child(coach);
+        readDataFromFirebase();
 
       /* a1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +95,68 @@ public class MainActivity3 extends AppCompatActivity implements View.OnClickList
             }
         });*/
 
+        proc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1=new Intent(MainActivity3.this,Payment.class);
+                intent1.putStringArrayListExtra("clickedButtonIds", new ArrayList<>(clickedButtonIds));
+                intent1.putExtra("dest",fromm+tto);
+                intent1.putExtra("dat",mail);
+                intent1.putExtra("coach",coach);
+                intent1.putExtra("fare",String.valueOf(far*clickedButtonIds.size()));
+                startActivity(intent1);
+                finish();
+            }
+        });
+
+    }
+
+    private void readDataFromFirebase() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+
+                seatsData.clear(); // Clear existing data
+
+                for (DataSnapshot seatSnapshot : dataSnapshot.getChildren()) {
+                    // Iterate through the seats data
+                    String seatId = seatSnapshot.getKey();
+                    String stringValue = seatSnapshot.getValue(String.class);
+
+                    seatsData.put(seatId, stringValue);
+                }
+
+                // Update TextViews based on the retrieved data
+                updateTextViews();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Failed to read value
+                Toast.makeText(MainActivity3.this, "Failed to read data from Firebase", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateTextViews() {
+        // Iterate through the TextViews and update their clickability
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 4; j++) {
+                String buttonId = String.format("%c%d", 'a' + i, j);
+                boolean isSeatOccupied = seatsData.containsKey(buttonId) && seatsData.get(buttonId).equals("true");
+               // textViews[i][j].setClickable(!isSeatOccupied);
+
+                // Update TextView background tint based on occupancy
+
+                // Update TextView clickability
+               if(!isSeatOccupied) {
+                   textViews[i][j].setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#00ff00")));
+                   textViews[i][j].setClickable(false);
+               }
+            }
+        }
     }
 
     private void initializeTextViews() {
@@ -157,7 +198,7 @@ public class MainActivity3 extends AppCompatActivity implements View.OnClickList
         int index = 0;
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 4; j++) {
-                buttonIds[index] = String.format("%c%d", rowLabel, j + 1);
+                buttonIds[index] = String.format("%c%d", rowLabel, j );
                 index++;
             }
             rowLabel++;

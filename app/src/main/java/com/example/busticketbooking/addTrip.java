@@ -149,11 +149,11 @@ public class addTrip extends AppCompatActivity {
 
                     HashMap<String,String> seats=new HashMap<>();
                     char nam='a';
-                    for (int j=0;j<36;j++){
-                        seats.put(nam+String.valueOf(j),"true");
-                        if((j+1)%4==0){
-                            nam++;
+                    for (int j=0;j<9;j++){
+                        for(int k=0;k<4;k++) {
+                            seats.put(nam+String.valueOf(k),"true");
                         }
+                        nam++;
                     }
 
                     reference.child("Trips").child(fr+to).child(datts).child(coch).setValue(trip);
